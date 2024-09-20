@@ -22,24 +22,6 @@ class Illustration
     #[ORM\ManyToOne(inversedBy: 'illustrations')]
     private ?Figure $figure = null;
 
-
-    #[Assert\Image(
-        maxSize: '1024k',
-        mimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
-    )]
-    private ?UploadedFile $imageFile = null;
-
-    public function getImageFile(): ?UploadedFile
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageFile(?UploadedFile $imageFile): self
-    {
-        $this->imageFile = $imageFile;
-
-        return $this;
-    }
     public function getId(): ?int
     {
         return $this->id;

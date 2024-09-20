@@ -16,8 +16,14 @@ class IllustrationType extends AbstractType
     {
         $builder
             ->add('imageFile', FileType::class, [
-                'label' => 'Image',
+                'label' => false,
+                'attr' => [
+                    'type' => 'file',
+                    'class' => 'filepond', // si vous souhaitez sélectionner l'élément par sa classe
+                    'accept' => 'image/jpeg, image/png', // si vous voulez restreindre les types de fichiers autorisés
+                ],
                 'required' => false,
+                'mapped' => false
             ]);
     }
 

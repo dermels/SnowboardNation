@@ -1,0 +1,98 @@
+$(document).ready(function() {
+    let mainIllustration = {};
+    let illustrations = [];
+    let i = 0;
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+    const mainPond = FilePond.create(document.querySelector('.mainFilepond'));
+    mainPond.on('addfile', (error, file) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            mainIllustration = {
+                name: file.filename || file.name,
+                base64: e.target.result
+            };
+        };
+        reader.readAsDataURL(file.file);
+    });
+    mainPond.on('removefile', () => {
+        mainIllustration = {};
+    });
+
+    const illustrationsPond = FilePond.create(document.querySelector('.illustrationsFilepond'));
+    illustrationsPond.on('addfile', (error, file) => {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            illustrations.push({
+                name: file.filename || file.name,
+                base64: e.target.result
+            });
+        };
+        reader.readAsDataURL(file.file);
+    });
+    illustrationsPond.on('removefile', (i, file) => {
+        console.log(file, i);
+        illustrations = illustrations.filter(function(illustration) {
+            return illustration.name !== file.file.name;
+        });
+    });
+
+
+    $('#add-video').click(function() {
+        i++;
+        $('#video-wrapper').append(`
+                <div>
+                    <input type="url" name="videos[${i}]" class="form-control">
+                    <button type="button" class="remove-video btn btn-danger">Remove URL</button>
+                </div>
+            `);
+
+    });
+
+    $(document).on('click', '.remove-video', function() {
+        $(this).parent().remove();
+    });
+
+    // On form submission:
+    $('#myForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = {};
+        var videos = [];
+        $(this).serializeArray().map(function(field) {
+            var name = field.name;
+            var value = field.value;
+
+            if (name.startsWith('videos[')) {
+                videos.push(value);
+            } else {
+                formData[name] = value;
+            }
+        });
+
+        // Add videos array to formData
+        formData.videos = videos;
+
+        formData.mainIllustration = mainIllustration;
+        formData.illustrations = illustrations;
+
+        console.log(formData);
+
+        // Submit form data as JSON
+        $.ajax({
+            url: "{{ path('figure_new_submit') }}",
+            method: 'POST',
+            data: JSON.stringify(formData),
+            contentType: "application/json",
+            success: function(response) {
+                console.log(response);
+                window.location.href = '{{ path('figure_submit_success') }}' + '?id=' + response.id;
+                alert('Figure saved successfully');
+            },
+            error: function(response) {
+                console.log(response);
+                alert('An error occurred while saving the figure');
+            }
+        });
+    });
+});
