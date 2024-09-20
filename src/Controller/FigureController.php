@@ -89,11 +89,16 @@ class FigureController extends AbstractController
 
         foreach ($illustrations as $illustration) {
             $filename = md5(uniqid()) . '.' . pathinfo($illustration["name"], PATHINFO_EXTENSION);
-            $path = $this->getParameter('kernel.project_dir') . '/uploads/images/' . $name . '/' . $filename;
+            $imgPath = '/uploads/images/' . $filename;
+            $path = $this->getParameter('kernel.project_dir') . "/public" . $imgPath;
+            $directoryPath = pathinfo($path, PATHINFO_DIRNAME);
+            if (!file_exists($directoryPath)) {
+                mkdir($directoryPath, 0755, true);
+            }
             $data = base64_decode(substr($illustration["base64"], strpos($illustration["base64"], ',') + 1));
             file_put_contents($path, $data);
             $newIllustration = new Illustration();
-            $newIllustration->setUrl($path);
+            $newIllustration->setUrl($imgPath);
             $this->entityManager->persist($newIllustration);
             $figure->addIllustration($newIllustration);
         }

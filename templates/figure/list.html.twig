@@ -15,7 +15,7 @@
         </thead>
         <tbody>
             {% for figure in figures %}
-                {{ dump(figure.mainIllustration.url) }}
+                {{ dump(figure.name) }}
                 <img src="{{ asset(figure.mainIllustration.url) }}" alt="{{ figure.name }}" width="100">
             {% endfor %}
         </tbody>
