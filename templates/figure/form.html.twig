@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Figure{% endblock %}
+
+{% block body %}
+    <h1>Create new Figure</h1>
+
+{#    {{ form_start(form) }}#}
+{#    {{ form_row(form.name) }}#}
+{#    {{ form_row(form.description) }}#}
+{#    {{ form_row(form.mainIllustration, {'attr': {'class': 'mainFilepond'}}) }}#}
+{#    <div data-prototype="{{ form_widget(form.illustrations.vars.prototype)|e('html_attr') }}" data-index="{{ form.illustrations|length }}" class="illustrations_wrapper">#}
+{#        {% for illustrationForm in form.illustrations %}#}
+{#            <div>#}
+{#                {{ form_row(illustrationForm.imageFile) }}#}
+{#                <button type="button" class="remove-illustration">Supprimer cette illustration</button>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    </div>#}
+{#    <button class="add_illustration">Ajouter une illustration</button>#}
+
+{#    <button class="btn">{{ button_label|default('Save') }}</button>#}
+{#    <input type="hidden" id="your_form_hash">#}
+{#    {{ form_end(form) }}#}
+
+    <form id="myForm" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="figureGroup">Groupe</label>
+            <input type="text" id="figureGroup" name="figureGroup" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="form-control" required></textarea>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label for="mainIllustration">Main Illustration</label>
+            <input type="file" id="mainIllustration" name="mainIllustration" class="mainFilepond" required>
+        </div>
+
+        <div class="illustrations_wrapper">
+            <label for="illustrations">Illustrations</label>
+            <input type="file" id="illustrations" name="illustrations[]" class="illustrationsFilepond" multiple>
+        </div>
+
+        <div class="form-group">
+            <label for="videos">Video URLs</label>
+            <div id="video-wrapper">
+                <div>
+                    <input type="url" name="videos[0]" class="form-control">
+                    <button type="button" class="remove-video btn btn-danger">Remove URL</button>
+                </div>
+            </div>
+            <button type="button" id="add-video" class="btn btn-secondary">Add URL</button>
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
+
+    </form>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('figure') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        {%  include 'figure/form.js.twig' %}
+    </script>
+{% endblock %}

@@ -23,7 +23,10 @@ class Figure
     private string $description;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $group;
+    private string $figureGroup;
+
+    #[ORM\OneToOne(targetEntity: Illustration::class, cascade: ['persist', 'remove'])]
+    private Illustration $mainIllustration;
 
     /**
      * @var Collection<int, Illustration>
@@ -67,17 +70,16 @@ class Figure
         return $this;
     }
 
-    public function getGroup(): ?string
+    public function getFigureGroup(): string
     {
-        return $this->group;
+        return $this->figureGroup;
     }
 
-    public function setGroup(string $group): static
+    public function setFigureGroup(string $figureGroup): void
     {
-        $this->group = $group;
-
-        return $this;
+        $this->figureGroup = $figureGroup;
     }
+
 
     public function getDescription(): ?string
     {
@@ -160,6 +162,18 @@ class Figure
     {
         return $this->messages;
     }
+
+    public function getMainIllustration(): Illustration
+    {
+        return $this->mainIllustration;
+    }
+
+    public function setMainIllustration(Illustration $mainIllustration): void
+    {
+        $this->mainIllustration = $mainIllustration;
+    }
+
+
 
     public function addMessage(Message $message): static
     {
